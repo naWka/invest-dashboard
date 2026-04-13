@@ -40,20 +40,24 @@ scripts/
 
 ### Как пушить изменения
 
-Рабочая копия с remote уже настроена. Для пуша:
+**Токен хранится в файле `.github-token`** (он в `.gitignore`, в репо НЕ попадает).
 
+Перед первым пушем в новой сессии настрой remote:
 ```bash
-cd /path/to/invest
+TOKEN=$(cat .github-token | tr -d '[:space:]')
+git remote set-url origin https://x-access-token:${TOKEN}@github.com/naWka/invest-dashboard.git
+# Или если remote ещё нет:
+# git remote add origin https://x-access-token:${TOKEN}@github.com/naWka/invest-dashboard.git
+```
+
+Затем пуш как обычно:
+```bash
 git add -A
 git commit -m "описание изменений"
 git push
 ```
 
-Если git remote не настроен (новая сессия), нужен Personal Access Token:
-```bash
-git remote add origin https://x-access-token:TOKEN@github.com/naWka/invest-dashboard.git
-git push -u origin main
-```
+**ВАЖНО**: Никогда не коммить `.github-token` — он в `.gitignore`. Не выводи содержимое токена в чат.
 
 ## При внесении изменений в index.html
 
