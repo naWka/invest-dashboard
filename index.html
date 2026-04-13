@@ -95,6 +95,58 @@
   .price-source { font-size:11px; padding:2px 8px; border-radius:6px; margin-left:8px; }
   .source-live { background:rgba(34,197,94,0.15); color:var(--green); }
   .source-manual { background:rgba(245,158,11,0.15); color:var(--orange); }
+
+  /* ── MOBILE ── */
+  @media(max-width:600px) {
+    body { padding:12px; }
+
+    .header { margin-bottom:20px; }
+    .header h1 { font-size:20px; }
+    .header .updated { font-size:11px; }
+    .header > div:last-child { width:100%; justify-content:space-between; }
+    .header > div:last-child > div:first-child { font-size:11px; }
+
+    .stats-row { grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:16px; }
+    .stat-card { padding:14px; }
+    .stat-card .value { font-size:20px; }
+    .stat-card .label { font-size:10px; }
+
+    .grid-2 { gap:16px; margin-bottom:16px; }
+    .card { padding:16px; }
+    .card h2 { font-size:14px; margin-bottom:12px; }
+    .chart-container { height:220px; }
+
+    /* Горизонтальный скролл для таблиц */
+    .card:has(table) { padding:16px 0; }
+    .card:has(table) > h2 { padding:0 16px; }
+    table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; }
+    thead { display:table; width:100%; }
+    tbody { display:table; width:100%; }
+    tr { display:table-row; }
+    th, td { font-size:12px; padding:8px 10px; }
+
+    /* DCA timeline */
+    .dca-item { flex-wrap:wrap; padding:10px; gap:10px; }
+    .dca-amount { font-size:13px; }
+    .dca-label { font-size:13px; }
+    .dca-sub { font-size:11px; }
+
+    /* Калькулятор */
+    .input-row { flex-direction:column; gap:10px; }
+    .input-group input { width:100%; }
+    button { width:100%; padding:12px; }
+
+    /* Прогресс */
+    #progress-section { font-size:13px; }
+
+    /* Toast */
+    #toast { left:12px; right:12px; bottom:12px; text-align:center; }
+  }
+
+  @media(max-width:380px) {
+    .stats-row { grid-template-columns: 1fr; }
+    .stat-card .value { font-size:22px; }
+  }
 </style>
 </head>
 <body>
