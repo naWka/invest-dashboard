@@ -445,42 +445,77 @@ if (window.__LIVE_PRICES__) {
   priceAsOf = lp.as_of || priceAsOf;
 }
 
-// ── REFRESH PRICES (только через сервер) ──
-const isLocalServer = location.protocol === 'http:' || location.protocol === 'https:';
+// ── REFRESH PRICES (клиентский fetch через CORS-прокси или локальный сервер) ──
+const YAHOO_TICKERS = { SWRD: 'SWRD.L', EIMI: 'EIMI.L', USSC: 'USSC.L' };
+const CORS_PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+];
 
-function refreshPrices() {
-  if (!isLocalServer) {
-    showToast('Для обновления цен запусти: python scripts/server.py', true);
-    return;
+async function fetchYahooPrice(symbol) {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const resp = await fetch(proxy(yahooUrl), { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) continue;
+      const data = await resp.json();
+      return Math.round(data.chart.result[0].meta.regularMarketPrice * 10000) / 10000;
+    } catch(e) { continue; }
   }
+  // Попробуем напрямую (работает на localhost)
+  try {
+    const resp = await fetch(yahooUrl, { signal: AbortSignal.timeout(8000) });
+    if (resp.ok) {
+      const data = await resp.json();
+      return Math.round(data.chart.result[0].meta.regularMarketPrice * 10000) / 10000;
+    }
+  } catch(e) {}
+  return null;
+}
 
+async function refreshPrices() {
   const btn = document.getElementById('btn-refresh');
   btn.classList.add('loading');
 
-  fetch('/api/prices')
-    .then(r => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
-    .then(data => {
-      if (data.SWRD) portfolio.prices.SWRD = data.SWRD;
-      if (data.EIMI) portfolio.prices.EIMI = data.EIMI;
-      if (data.USSC) portfolio.prices.USSC = data.USSC;
+  // Если запущен локальный сервер — используем его API
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    try {
+      const resp = await fetch('/api/prices');
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.SWRD) portfolio.prices.SWRD = data.SWRD;
+        if (data.EIMI) portfolio.prices.EIMI = data.EIMI;
+        if (data.USSC) portfolio.prices.USSC = data.USSC;
+        priceSource = data.source || 'yahoo_finance';
+        priceAsOf = data.as_of || new Date().toISOString();
+        syncCalcInputs(); reRender();
+        btn.classList.remove('loading');
+        showToast('Цены обновлены с Yahoo Finance (сервер)');
+        return;
+      }
+    } catch(e) {}
+  }
 
-      priceSource = data.source || 'yahoo_finance';
-      priceAsOf = data.as_of || new Date().toISOString();
+  // Клиентский fetch через CORS-прокси
+  let updated = 0;
+  for (const [etf, symbol] of Object.entries(YAHOO_TICKERS)) {
+    const price = await fetchYahooPrice(symbol);
+    if (price !== null) {
+      portfolio.prices[etf] = price;
+      updated++;
+    }
+  }
 
-      syncCalcInputs();
-      reRender();
-
-      btn.classList.remove('loading');
-      showToast('Цены обновлены с Yahoo Finance');
-    })
-    .catch(err => {
-      btn.classList.remove('loading');
-      console.error('Ошибка обновления цен:', err);
-      showToast('Не удалось обновить цены. Сервер запущен?', true);
-    });
+  btn.classList.remove('loading');
+  if (updated > 0) {
+    priceSource = 'yahoo_finance';
+    priceAsOf = new Date().toISOString();
+    syncCalcInputs();
+    reRender();
+    showToast(`Цены обновлены (${updated}/3 ETF) с Yahoo Finance`);
+  } else {
+    showToast('Не удалось обновить цены. Попробуй позже.', true);
+  }
 }
 
 function syncCalcInputs() {
@@ -539,10 +574,8 @@ renderStats = function() {
 // ── INIT ──
 syncCalcInputs();
 
-// Если открыто через file:// и нет prices.js — подсветим кнопку
-if (!isLocalServer && !window.__LIVE_PRICES__) {
-  document.getElementById('btn-refresh').title = 'Запусти python scripts/server.py и нажми эту кнопку';
-}
+// Подсказка по кнопке
+document.getElementById('btn-refresh').title = 'Обновить цены с Yahoo Finance';
 
 renderStats();
 renderAllocation();
