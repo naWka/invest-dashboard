@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "plan_version": "3.0",
+    "broker": "Freedom Finance (Казахстан)",
+    "account_limit_usd": 30000,
+    "currency": "USD",
+    "horizon_years": 7,
+    "strategy": "Агрессивный",
+    "restrictions": "Без плеча, без шортов, только Acc ETF",
+    "exchange": "LSE",
+    "last_updated": "2026-04-13"
+  },
+  "target_allocation": {
+    "SWRD": 0.7,
+    "EIMI": 0.15,
+    "USSC": 0.15
+  },
+  "etfs": {
+    "SWRD": {
+      "full_name": "SPDR MSCI World UCITS ETF (Acc)",
+      "role": "Ядро — развитые рынки",
+      "isin": "IE00BFY0GT14",
+      "ticker_lse": "SWRD.L",
+      "ticker_freedom": "SWRD.EU",
+      "expense_ratio": 0.0012,
+      "index": "MSCI World",
+      "provider": "State Street (SPDR)"
+    },
+    "EIMI": {
+      "full_name": "iShares Core MSCI EM IMI UCITS ETF (Acc)",
+      "role": "Emerging Markets",
+      "isin": "IE00BKM4GZ66",
+      "ticker_lse": "EIMI.L",
+      "ticker_freedom": "EIMI.EU",
+      "expense_ratio": 0.0018,
+      "index": "MSCI Emerging Markets IMI",
+      "provider": "iShares (BlackRock)"
+    },
+    "USSC": {
+      "full_name": "SPDR MSCI USA Small Cap Value Weighted UCITS ETF (Acc)",
+      "role": "US Small Cap Value",
+      "isin": "IE00BSPLC413",
+      "ticker_lse": "USSC.L",
+      "ticker_freedom": "USSC.EU",
+      "ticker_xetra": "ZPRV.DE",
+      "expense_ratio": 0.003,
+      "index": "MSCI USA Small Cap Value Weighted",
+      "provider": "State Street (SPDR)"
+    }
+  },
+  "holdings": {
+    "SWRD": {
+      "shares": 24,
+      "avg_price": 47.03
+    },
+    "EIMI": {
+      "shares": 14,
+      "avg_price": 49.2
+    },
+    "USSC": {
+      "shares": 3,
+      "avg_price": 84.21
+    }
+  },
+  "prices": {
+    "SWRD": 47.96,
+    "EIMI": 49.12,
+    "USSC": 84.14,
+    "as_of": "2026-04-13"
+  },
+  "cash_usd": 4428.76,
+  "dca_plan": {
+    "total_budget": 6000,
+    "tranches": [
+      {
+        "id": 1,
+        "date": "2026-04-13",
+        "status": "completed",
+        "budget": 1600,
+        "orders": {
+          "SWRD": {
+            "shares": 14,
+            "avg_price": 48.005
+          },
+          "EIMI": {
+            "shares": 14,
+            "avg_price": 49.2
+          },
+          "USSC": {
+            "shares": 3,
+            "avg_price": 84.21
+          }
+        },
+        "note": "EIMI перекуплен (14 вместо ~9). Алгоритм скомпенсирует."
+      },
+      {
+        "id": 2,
+        "date_planned": "2026-04-17",
+        "status": "pending",
+        "budget": 1476,
+        "planned_orders": {
+          "SWRD": {
+            "shares": 29,
+            "price_est": 48.0
+          },
+          "EIMI": {
+            "shares": 0,
+            "price_est": 49.17
+          },
+          "USSC": {
+            "shares": 1,
+            "price_est": 84.13
+          }
+        }
+      },
+      {
+        "id": 3,
+        "date_planned": "2026-04-22",
+        "status": "pending",
+        "budget": 1476,
+        "planned_orders": {
+          "SWRD": {
+            "shares": 22,
+            "price_est": 48.0
+          },
+          "EIMI": {
+            "shares": 1,
+            "price_est": 49.17
+          },
+          "USSC": {
+            "shares": 4,
+            "price_est": 84.13
+          }
+        }
+      },
+      {
+        "id": 4,
+        "date_planned": "2026-04-25",
+        "status": "pending",
+        "budget": 1511,
+        "planned_orders": {
+          "SWRD": {
+            "shares": 22,
+            "price_est": 48.0
+          },
+          "EIMI": {
+            "shares": 4,
+            "price_est": 49.17
+          },
+          "USSC": {
+            "shares": 3,
+            "price_est": 84.13
+          }
+        }
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "date": "2026-03-27",
+      "time": "16:32:18",
+      "broker_deal_id": "634937445",
+      "type": "buy",
+      "tranche": null,
+      "etf": "SWRD",
+      "shares": 10,
+      "price": 45.67,
+      "total": 456.7
+    },
+    {
+      "date": "2026-04-13",
+      "time": "16:02:06",
+      "broker_deal_id": "640032274",
+      "type": "buy",
+      "tranche": 1,
+      "etf": "SWRD",
+      "shares": 14,
+      "price": 48.005,
+      "total": 672.07
+    },
+    {
+      "date": "2026-04-13",
+      "time": "16:04:12",
+      "broker_deal_id": "640032469",
+      "type": "buy",
+      "tranche": 1,
+      "etf": "EIMI",
+      "shares": 14,
+      "price": 49.2,
+      "total": 688.8
+    },
+    {
+      "date": "2026-04-13",
+      "time": "16:05:23",
+      "broker_deal_id": "640032572",
+      "type": "buy",
+      "tranche": 1,
+      "etf": "USSC",
+      "shares": 3,
+      "price": 84.21,
+      "total": 252.63
+    }
+  ]
+}

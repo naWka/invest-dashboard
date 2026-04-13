@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Инвест Dashboard v3.0</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- Подгружаем последние сохранённые цены (генерируется server.py) -->
+<script src="data/prices.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4ed;
+    --text2: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --orange: #f59e0b;
+    --cyan: #06b6d4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',-apple-system,system-ui,sans-serif; padding:24px; min-height:100vh; }
+
+  .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; flex-wrap:wrap; gap:16px; }
+  .header h1 { font-size:28px; font-weight:700; }
+  .header h1 span { color:var(--blue); }
+  .header .updated { color:var(--text2); font-size:13px; }
+
+  .stats-row { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  .stat-card .label { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+  .stat-card .value { font-size:28px; font-weight:700; }
+  .stat-card .sub { font-size:12px; color:var(--text2); margin-top:4px; }
+
+  .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:24px; }
+  @media(max-width:900px) { .grid-2 { grid-template-columns:1fr; } }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .card h2 { font-size:16px; font-weight:600; margin-bottom:16px; }
+
+  .chart-container { position:relative; height:280px; }
+
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; padding:8px 12px; border-bottom:1px solid var(--border); }
+  td { padding:10px 12px; font-size:14px; border-bottom:1px solid var(--border); }
+  tr:last-child td { border-bottom:none; }
+
+  .badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; }
+  .badge-green { background:rgba(34,197,94,0.15); color:var(--green); }
+  .badge-yellow { background:rgba(245,158,11,0.15); color:var(--orange); }
+  .badge-red { background:rgba(239,68,68,0.15); color:var(--red); }
+
+  .progress-bar { background:var(--border); border-radius:4px; height:8px; overflow:hidden; margin-top:8px; }
+  .progress-fill { height:100%; border-radius:4px; transition:width 0.6s ease; }
+
+  .dca-timeline { display:flex; flex-direction:column; gap:12px; }
+  .dca-item { display:flex; align-items:center; gap:16px; padding:12px; border-radius:8px; background:rgba(255,255,255,0.02); }
+  .dca-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+  .dca-done { background:var(--green); }
+  .dca-pending { background:var(--border); border:2px solid var(--text2); }
+  .dca-info { flex:1; }
+  .dca-label { font-size:14px; font-weight:500; }
+  .dca-sub { font-size:12px; color:var(--text2); }
+  .dca-amount { font-size:14px; font-weight:600; }
+
+  .etf-color-swrd { color: #3b82f6; }
+  .etf-color-eimi { color: #22c55e; }
+  .etf-color-ussc { color: #f59e0b; }
+
+  .algo-section { margin-top:24px; }
+  .algo-section h2 { margin-bottom:16px; }
+  .input-row { display:flex; gap:12px; align-items:end; flex-wrap:wrap; margin-bottom:16px; }
+  .input-group { display:flex; flex-direction:column; gap:4px; }
+  .input-group label { font-size:12px; color:var(--text2); }
+  .input-group input { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-size:14px; width:160px; }
+  button { background:var(--blue); color:white; border:none; border-radius:8px; padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer; transition:background 0.2s; }
+  button:hover { background:#2563eb; }
+
+  #calc-result { margin-top:16px; }
+  .result-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px; margin-top:12px; }
+
+  .btn-refresh { background:var(--green); display:inline-flex; align-items:center; gap:8px; }
+  .btn-refresh:hover { background:#16a34a; }
+  .btn-refresh.loading { opacity:0.7; pointer-events:none; }
+  .btn-refresh .spinner { display:none; width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; }
+  .btn-refresh.loading .spinner { display:inline-block; }
+  .btn-refresh.loading .btn-text { display:none; }
+  .btn-refresh .btn-loading-text { display:none; }
+  .btn-refresh.loading .btn-loading-text { display:inline; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .price-source { font-size:11px; padding:2px 8px; border-radius:6px; margin-left:8px; }
+  .source-live { background:rgba(34,197,94,0.15); color:var(--green); }
+  .source-manual { background:rgba(245,158,11,0.15); color:var(--orange); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>📊 <span>Инвест</span> Dashboard</h1>
+    <div class="updated" id="last-updated"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="font-size:13px;color:var(--text2)">Plan v3.0 · Freedom Finance · Acc ETF</div>
+    <button class="btn-refresh" id="btn-refresh" onclick="refreshPrices()">
+      <span class="spinner"></span>
+      <span class="btn-text">🔄 Обновить цены</span>
+      <span class="btn-loading-text">Загружаю…</span>
+    </button>
+  </div>
+</div>
+
+<div class="stats-row" id="stats-row"></div>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Аллокация портфеля</h2>
+    <div class="chart-container">
+      <canvas id="allocationChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Цель vs Факт</h2>
+    <div class="chart-container">
+      <canvas id="targetChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:24px">
+  <h2>Позиции</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ETF</th>
+        <th>Штук</th>
+        <th>Ср. цена</th>
+        <th>Тек. цена</th>
+        <th>Стоимость</th>
+        <th>P/L</th>
+        <th>Доля</th>
+        <th>Цель</th>
+        <th>Статус</th>
+      </tr>
+    </thead>
+    <tbody id="holdings-table"></tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-bottom:24px">
+  <h2>DCA-расписание (вход $6,000)</h2>
+  <div class="dca-timeline" id="dca-timeline"></div>
+</div>
+
+<div class="card" style="margin-bottom:24px">
+  <h2>Прогресс к $30,000</h2>
+  <div id="progress-section"></div>
+</div>
+
+<div class="card algo-section">
+  <h2>🧮 Калькулятор покупки</h2>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Введите сумму — алгоритм из плана v3.0 рассчитает оптимальное распределение</p>
+  <div class="input-row">
+    <div class="input-group">
+      <label>Сумма для покупки ($)</label>
+      <input type="number" id="buy-amount" placeholder="500" value="">
+    </div>
+    <div class="input-group">
+      <label>Цена SWRD ($)</label>
+      <input type="number" id="price-swrd" step="0.01">
+    </div>
+    <div class="input-group">
+      <label>Цена EIMI ($)</label>
+      <input type="number" id="price-eimi" step="0.01">
+    </div>
+    <div class="input-group">
+      <label>Цена USSC ($)</label>
+      <input type="number" id="price-ussc" step="0.01">
+    </div>
+    <button onclick="calculateBuy()">Рассчитать</button>
+  </div>
+  <div id="calc-result"></div>
+</div>
+
+<div class="card" style="margin-top:24px">
+  <h2>История транзакций</h2>
+  <table>
+    <thead>
+      <tr><th>Дата / Время</th><th>№ сделки</th><th>Тип</th><th>ETF</th><th>Штук</th><th>Цена</th><th>Сумма</th></tr>
+    </thead>
+    <tbody id="tx-table"></tbody>
+  </table>
+</div>
+
+<script>
+// ── DATA ──
+const portfolio = {
+  holdings: { SWRD: { shares: 24, avg_price: 47.03 }, EIMI: { shares: 14, avg_price: 49.20 }, USSC: { shares: 3, avg_price: 84.21 } },
+  prices: { SWRD: 48.005, EIMI: 49.17, USSC: 84.13 },
+  cash: 4428.76,
+  target: { SWRD: 0.70, EIMI: 0.15, USSC: 0.15 },
+  lastUpdated: "2026-04-13",
+  accountLimit: 30000,
+  transactions: [
+    { date: "2026-03-27", time: "16:32", dealId: "634937445", type: "buy", tranche: null, etf: "SWRD", shares: 10, price: 45.67, total: 456.70 },
+    { date: "2026-04-13", time: "16:02", dealId: "640032274", type: "buy", tranche: 1, etf: "SWRD", shares: 14, price: 48.005, total: 672.07 },
+    { date: "2026-04-13", time: "16:04", dealId: "640032469", type: "buy", tranche: 1, etf: "EIMI", shares: 14, price: 49.20, total: 688.80 },
+    { date: "2026-04-13", time: "16:05", dealId: "640032572", type: "buy", tranche: 1, etf: "USSC", shares: 3, price: 84.21, total: 252.63 }
+  ],
+  dca: [
+    { id: 1, date: "13 апр", budget: 1600, status: "done", orders: "SWRD×14, EIMI×14, USSC×3" },
+    { id: 2, date: "17–18 апр", budget: 1476, status: "pending", orders: "SWRD×29, USSC×1" },
+    { id: 3, date: "22–23 апр", budget: 1476, status: "pending", orders: "SWRD×22, EIMI×1, USSC×4" },
+    { id: 4, date: "25–28 апр", budget: 1511, status: "pending", orders: "SWRD×22, EIMI×4, USSC×3" }
+  ]
+};
+
+const COLORS = { SWRD: '#3b82f6', EIMI: '#22c55e', USSC: '#f59e0b' };
+const ETFS = ['SWRD', 'EIMI', 'USSC'];
+
+function val(etf) { return portfolio.holdings[etf].shares * portfolio.prices[etf]; }
+function totalVal() { return ETFS.reduce((s, e) => s + val(e), 0); }
+function pct(etf) { return val(etf) / totalVal() * 100; }
+
+// ── RENDER STATS ──
+function renderStats() {
+  const total = totalVal();
+  const totalWithCash = total + portfolio.cash;
+  const invested = ETFS.reduce((s, e) => s + portfolio.holdings[e].shares * portfolio.holdings[e].avg_price, 0);
+  const pl = total - invested;
+  const plPct = (pl / invested * 100);
+
+  document.getElementById('last-updated').textContent = `Обновлено: ${portfolio.lastUpdated}`;
+
+  const stats = [
+    { label: 'Портфель', value: `$${total.toFixed(0)}`, sub: `${ETFS.length} ETF` },
+    { label: 'Кэш на счёте', value: `$${portfolio.cash.toFixed(0)}`, sub: 'Ожидает DCA' },
+    { label: 'Всего на счёте', value: `$${totalWithCash.toFixed(0)}`, sub: `Лимит $${(portfolio.accountLimit/1000).toFixed(0)}k` },
+    { label: 'P/L (нереализ.)', value: `${pl >= 0 ? '+' : ''}$${pl.toFixed(2)}`, sub: `${plPct >= 0 ? '+' : ''}${plPct.toFixed(2)}%` }
+  ];
+
+  document.getElementById('stats-row').innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="label">${s.label}</div>
+      <div class="value" style="color:${s.label.includes('P/L') ? (pl >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--text)'}">${s.value}</div>
+      <div class="sub">${s.sub}</div>
+    </div>
+  `).join('');
+}
+
+// ── ALLOCATION CHART ──
+function renderAllocation() {
+  new Chart(document.getElementById('allocationChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ETFS.map(e => `${e} (${pct(e).toFixed(1)}%)`),
+      datasets: [{ data: ETFS.map(e => val(e).toFixed(2)), backgroundColor: ETFS.map(e => COLORS[e]), borderWidth: 0, borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#8b8fa3', padding: 16, font: { size: 12 } } }
+      }
+    }
+  });
+}
+
+// ── TARGET VS ACTUAL CHART ──
+function renderTarget() {
+  new Chart(document.getElementById('targetChart'), {
+    type: 'bar',
+    data: {
+      labels: ETFS,
+      datasets: [
+        { label: 'Факт', data: ETFS.map(e => pct(e).toFixed(1)), backgroundColor: ETFS.map(e => COLORS[e]), borderRadius: 6 },
+        { label: 'Цель', data: ETFS.map(e => portfolio.target[e] * 100), backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.3)', borderWidth: 1, borderRadius: 6 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 80, ticks: { color: '#8b8fa3', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#8b8fa3' }, grid: { display: false } }
+      },
+      plugins: { legend: { labels: { color: '#8b8fa3' } } }
+    }
+  });
+}
+
+// ── HOLDINGS TABLE ──
+function renderHoldings() {
+  const total = totalVal();
+  document.getElementById('holdings-table').innerHTML = ETFS.map(etf => {
+    const h = portfolio.holdings[etf];
+    const p = portfolio.prices[etf];
+    const value = h.shares * p;
+    const cost = h.shares * h.avg_price;
+    const pl = value - cost;
+    const plPct = (pl / cost * 100);
+    const share = value / total * 100;
+    const target = portfolio.target[etf] * 100;
+    const dev = share - target;
+    const badge = Math.abs(dev) <= 2 ? 'green' : Math.abs(dev) <= 5 ? 'yellow' : 'red';
+    return `<tr>
+      <td><strong class="etf-color-${etf.toLowerCase()}">${etf}</strong></td>
+      <td>${h.shares}</td>
+      <td>$${h.avg_price.toFixed(2)}</td>
+      <td>$${p.toFixed(2)}</td>
+      <td>$${value.toFixed(2)}</td>
+      <td style="color:${pl >= 0 ? 'var(--green)' : 'var(--red)'}">${pl >= 0 ? '+' : ''}$${pl.toFixed(2)} (${plPct >= 0 ? '+' : ''}${plPct.toFixed(1)}%)</td>
+      <td>${share.toFixed(1)}%</td>
+      <td>${target}%</td>
+      <td><span class="badge badge-${badge}">${dev >= 0 ? '+' : ''}${dev.toFixed(1)} п.п.</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── DCA TIMELINE ──
+function renderDCA() {
+  document.getElementById('dca-timeline').innerHTML = portfolio.dca.map(t => `
+    <div class="dca-item">
+      <div class="dca-dot ${t.status === 'done' ? 'dca-done' : 'dca-pending'}"></div>
+      <div class="dca-info">
+        <div class="dca-label">Транш ${t.id} — ${t.date}</div>
+        <div class="dca-sub">${t.orders}</div>
+      </div>
+      <div class="dca-amount">$${t.budget.toLocaleString()}</div>
+      <span class="badge ${t.status === 'done' ? 'badge-green' : 'badge-yellow'}">${t.status === 'done' ? '✅ Выполнен' : '⏳ Ожидает'}</span>
+    </div>
+  `).join('');
+}
+
+// ── PROGRESS TO $30K ──
+function renderProgress() {
+  const total = totalVal() + portfolio.cash;
+  const pct = (total / portfolio.accountLimit * 100).toFixed(1);
+  document.getElementById('progress-section').innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px">
+      <span>$${total.toFixed(0)} / $${(portfolio.accountLimit/1000).toFixed(0)},000</span>
+      <span style="color:var(--blue);font-weight:600">${pct}%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-top:8px">
+      Осталось $${(portfolio.accountLimit - total).toFixed(0)} до лимита Freedom Finance → затем Interactive Brokers
+    </div>
+  `;
+}
+
+// ── TRANSACTIONS TABLE ──
+function renderTx() {
+  document.getElementById('tx-table').innerHTML = [...portfolio.transactions].reverse().map(t => `
+    <tr>
+      <td>${t.date}<br><span style="color:var(--text2);font-size:11px">${t.time}</span></td>
+      <td style="color:var(--text2);font-size:12px">${t.dealId}</td>
+      <td><span class="badge badge-green">Покупка</span></td>
+      <td><strong class="etf-color-${t.etf.toLowerCase()}">${t.etf}</strong></td>
+      <td>${t.shares}</td>
+      <td>$${t.price.toFixed(3).replace(/\.?0+$/, '')}</td>
+      <td>$${t.total.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+// ── BUY CALCULATOR ──
+function calculateBuy() {
+  const amount = parseFloat(document.getElementById('buy-amount').value);
+  if (!amount || amount <= 0) { alert('Введите сумму'); return; }
+
+  const prices = {
+    SWRD: parseFloat(document.getElementById('price-swrd').value) || portfolio.prices.SWRD,
+    EIMI: parseFloat(document.getElementById('price-eimi').value) || portfolio.prices.EIMI,
+    USSC: parseFloat(document.getElementById('price-ussc').value) || portfolio.prices.USSC
+  };
+
+  const currentValues = {};
+  ETFS.forEach(e => { currentValues[e] = portfolio.holdings[e].shares * prices[e]; });
+  const portfolioCurrent = ETFS.reduce((s, e) => s + currentValues[e], 0);
+  const portfolioFuture = portfolioCurrent + amount;
+  const targets = {};
+  ETFS.forEach(e => { targets[e] = portfolioFuture * portfolio.target[e]; });
+  const deficits = {};
+  ETFS.forEach(e => { deficits[e] = targets[e] - currentValues[e]; });
+
+  const sorted = [...ETFS].sort((a, b) => deficits[b] - deficits[a]);
+  let remaining = amount;
+  const buy = { SWRD: 0, EIMI: 0, USSC: 0 };
+
+  sorted.forEach(etf => {
+    if (deficits[etf] <= 0) return;
+    const maxShares = Math.floor(Math.min(deficits[etf], remaining) / prices[etf]);
+    if (maxShares > 0) { buy[etf] = maxShares; remaining -= maxShares * prices[etf]; }
+  });
+  sorted.forEach(etf => {
+    if (remaining < prices[etf]) return;
+    const extra = Math.floor(remaining / prices[etf]);
+    if (extra > 0) { buy[etf] += extra; remaining -= extra * prices[etf]; }
+  });
+
+  const newTotal = ETFS.reduce((s, e) => s + (portfolio.holdings[e].shares + buy[e]) * prices[e], 0);
+
+  let html = '<div class="result-card"><table><thead><tr><th>ETF</th><th>Купить</th><th>Сумма</th><th>Нов. доля</th><th>Цель</th><th>Статус</th></tr></thead><tbody>';
+  ETFS.forEach(etf => {
+    const cost = buy[etf] * prices[etf];
+    const newPct = ((portfolio.holdings[etf].shares + buy[etf]) * prices[etf] / newTotal * 100);
+    const target = portfolio.target[etf] * 100;
+    const dev = newPct - target;
+    const badge = Math.abs(dev) <= 2 ? 'green' : Math.abs(dev) <= 5 ? 'yellow' : 'red';
+    html += `<tr>
+      <td><strong class="etf-color-${etf.toLowerCase()}">${etf}</strong></td>
+      <td>${buy[etf] > 0 ? buy[etf] + ' шт.' : '—'}</td>
+      <td>${buy[etf] > 0 ? '$' + cost.toFixed(2) : '—'}</td>
+      <td>${newPct.toFixed(1)}%</td>
+      <td>${target}%</td>
+      <td><span class="badge badge-${badge}">${dev >= 0 ? '+' : ''}${dev.toFixed(1)} п.п.</span></td>
+    </tr>`;
+  });
+  html += `</tbody></table>
+    <div style="margin-top:12px;font-size:14px">
+      💰 Потратить: <strong>$${(amount - remaining).toFixed(2)}</strong> · 💵 Остаток: <strong>$${remaining.toFixed(2)}</strong> · 📊 Портфель: <strong>$${newTotal.toFixed(2)}</strong>
+    </div>
+  </div>`;
+
+  document.getElementById('calc-result').innerHTML = html;
+}
+
+// ── PRICE SOURCE LOGIC ──
+// Приоритет: prices.js (генерируется сервером) > захардкоженные в HTML
+let priceSource = 'hardcoded';
+let priceAsOf = portfolio.lastUpdated;
+
+// Подхватываем prices.js если он загрузился (работает и через file://, и через localhost)
+if (window.__LIVE_PRICES__) {
+  const lp = window.__LIVE_PRICES__;
+  if (lp.SWRD) portfolio.prices.SWRD = lp.SWRD;
+  if (lp.EIMI) portfolio.prices.EIMI = lp.EIMI;
+  if (lp.USSC) portfolio.prices.USSC = lp.USSC;
+  priceSource = lp.source || 'yahoo_finance';
+  priceAsOf = lp.as_of || priceAsOf;
+}
+
+// ── REFRESH PRICES (только через сервер) ──
+const isLocalServer = location.protocol === 'http:' || location.protocol === 'https:';
+
+function refreshPrices() {
+  if (!isLocalServer) {
+    showToast('Для обновления цен запусти: python scripts/server.py', true);
+    return;
+  }
+
+  const btn = document.getElementById('btn-refresh');
+  btn.classList.add('loading');
+
+  fetch('/api/prices')
+    .then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then(data => {
+      if (data.SWRD) portfolio.prices.SWRD = data.SWRD;
+      if (data.EIMI) portfolio.prices.EIMI = data.EIMI;
+      if (data.USSC) portfolio.prices.USSC = data.USSC;
+
+      priceSource = data.source || 'yahoo_finance';
+      priceAsOf = data.as_of || new Date().toISOString();
+
+      syncCalcInputs();
+      reRender();
+
+      btn.classList.remove('loading');
+      showToast('Цены обновлены с Yahoo Finance');
+    })
+    .catch(err => {
+      btn.classList.remove('loading');
+      console.error('Ошибка обновления цен:', err);
+      showToast('Не удалось обновить цены. Сервер запущен?', true);
+    });
+}
+
+function syncCalcInputs() {
+  document.getElementById('price-swrd').value = portfolio.prices.SWRD;
+  document.getElementById('price-eimi').value = portfolio.prices.EIMI;
+  document.getElementById('price-ussc').value = portfolio.prices.USSC;
+}
+
+function reRender() {
+  renderStats();
+  renderHoldings();
+  renderProgress();
+  Chart.getChart('allocationChart')?.destroy();
+  Chart.getChart('targetChart')?.destroy();
+  renderAllocation();
+  renderTarget();
+}
+
+function showToast(msg, isError) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:500;z-index:999;transition:opacity 0.4s;opacity:0;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.style.background = isError ? 'var(--red)' : 'var(--green)';
+  toast.style.color = 'white';
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+}
+
+// Переопределяем renderStats чтобы показывать источник и дату цен
+const _origRenderStats = renderStats;
+renderStats = function() {
+  _origRenderStats();
+  const dt = priceAsOf.includes('T') ? new Date(priceAsOf).toLocaleString('ru-RU') : priceAsOf;
+
+  let srcLabel, srcClass;
+  if (priceSource === 'yahoo_finance') {
+    srcLabel = 'Yahoo Finance';
+    srcClass = 'source-live';
+  } else if (priceSource === 'hardcoded') {
+    srcLabel = 'захардкожено';
+    srcClass = 'source-manual';
+  } else {
+    srcLabel = 'вручную';
+    srcClass = 'source-manual';
+  }
+
+  document.getElementById('last-updated').innerHTML =
+    `Цены на: ${dt} <span class="price-source ${srcClass}">${srcLabel}</span>`;
+};
+
+// ── INIT ──
+syncCalcInputs();
+
+// Если открыто через file:// и нет prices.js — подсветим кнопку
+if (!isLocalServer && !window.__LIVE_PRICES__) {
+  document.getElementById('btn-refresh').title = 'Запусти python scripts/server.py и нажми эту кнопку';
+}
+
+renderStats();
+renderAllocation();
+renderTarget();
+renderHoldings();
+renderDCA();
+renderProgress();
+renderTx();
+</script>
+</body>
+</html>
