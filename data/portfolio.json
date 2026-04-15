@@ -3,12 +3,14 @@
     "plan_version": "3.0",
     "broker": "Freedom Finance (Казахстан)",
     "account_limit_usd": 30000,
+    "total_budget_usd": 15000,
+    "budget_note": "Второй доход ($3,400) прекратился. Бюджет $15k, дальше по ситуации.",
     "currency": "USD",
     "horizon_years": 7,
     "strategy": "Агрессивный",
     "restrictions": "Без плеча, без шортов, только Acc ETF",
     "exchange": "LSE",
-    "last_updated": "2026-04-13"
+    "last_updated": "2026-04-15"
   },
   "target_allocation": {
     "SWRD": 0.7,
@@ -63,14 +65,16 @@
     }
   },
   "prices": {
-    "SWRD": 49.39,
-    "EIMI": 50.85,
-    "USSC": 85.39,
-    "as_of": "2026-04-15"
+    "SWRD": 47.96,
+    "EIMI": 49.12,
+    "USSC": 84.14,
+    "as_of": "2026-04-13"
   },
   "cash_usd": 4428.76,
   "dca_plan": {
-    "total_budget": 6000,
+    "total_budget": 15000,
+    "phase1_budget": 6000,
+    "phase2_budget": 9000,
     "tranches": [
       {
         "id": 1,
@@ -152,6 +156,35 @@
             "price_est": 84.13
           }
         }
+      },
+      {
+        "id": 5,
+        "phase": 2,
+        "date_planned": "2026-05-05",
+        "status": "planned",
+        "budget": 2250,
+        "note": "Фаза 2. Рассчитать по алгоритму ближе к дате."
+      },
+      {
+        "id": 6,
+        "phase": 2,
+        "date_planned": "2026-05-12",
+        "status": "planned",
+        "budget": 2250
+      },
+      {
+        "id": 7,
+        "phase": 2,
+        "date_planned": "2026-05-19",
+        "status": "planned",
+        "budget": 2250
+      },
+      {
+        "id": 8,
+        "phase": 2,
+        "date_planned": "2026-05-26",
+        "status": "planned",
+        "budget": 2250
       }
     ]
   },
