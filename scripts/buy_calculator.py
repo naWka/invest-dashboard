@@ -10,13 +10,116 @@ import math
 import os
 import sys
 import argparse
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PORTFOLIO_PATH = os.path.join(SCRIPT_DIR, "..", "data", "portfolio.json")
 
 TARGET = {"SWRD": 0.70, "EIMI": 0.15, "USSC": 0.15}
 ETF_ORDER = ["SWRD", "EIMI", "USSC"]
+
+
+# ── Trading Calendar (US NYSE + UK LSE holidays) ──
+
+def _compute_easter(year: int) -> date:
+    """Anonymous Gregorian algorithm for Easter Sunday."""
+    a = year % 19
+    b, c = divmod(year, 100)
+    d, e = divmod(b, 4)
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = divmod(c, 4)
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    month = (h + l - 7 * m + 114) // 31
+    day = ((h + l - 7 * m + 114) % 31) + 1
+    return date(year, month, day)
+
+
+def _nth_weekday(year: int, month: int, weekday: int, n: int) -> date:
+    """Return the n-th occurrence of weekday (0=Mon) in given month."""
+    first = date(year, month, 1)
+    diff = (weekday - first.weekday()) % 7
+    return date(year, month, 1 + diff + (n - 1) * 7)
+
+
+def _last_weekday(year: int, month: int, weekday: int) -> date:
+    """Return the last occurrence of weekday in given month."""
+    if month == 12:
+        last_day = date(year + 1, 1, 1) - timedelta(days=1)
+    else:
+        last_day = date(year, month + 1, 1) - timedelta(days=1)
+    diff = (last_day.weekday() - weekday) % 7
+    return last_day - timedelta(days=diff)
+
+
+def _observed(d: date) -> date:
+    """If holiday falls on weekend, return the observed trading closure date."""
+    if d.weekday() == 5:  # Saturday → Friday
+        return d - timedelta(days=1)
+    if d.weekday() == 6:  # Sunday → Monday
+        return d + timedelta(days=1)
+    return d
+
+
+def get_holidays(year: int) -> set:
+    """Return set of non-trading dates (US NYSE + UK LSE holidays) for a year."""
+    holidays = set()
+
+    # Fixed holidays
+    for m, d in [(1, 1), (7, 4), (12, 25), (12, 26)]:
+        holidays.add(_observed(date(year, m, d)))
+
+    # Floating US holidays
+    holidays.add(_nth_weekday(year, 1, 0, 3))   # MLK Day — 3rd Monday Jan
+    holidays.add(_nth_weekday(year, 2, 0, 3))   # Presidents Day — 3rd Monday Feb
+    holidays.add(_last_weekday(year, 5, 0))      # Memorial Day — last Monday May
+    holidays.add(_nth_weekday(year, 9, 0, 1))    # Labor Day — 1st Monday Sep
+    holidays.add(_nth_weekday(year, 11, 3, 4))   # Thanksgiving — 4th Thursday Nov
+
+    # Easter-based (Good Friday + Easter Monday for UK)
+    easter = _compute_easter(year)
+    holidays.add(easter - timedelta(days=2))     # Good Friday
+    holidays.add(easter + timedelta(days=1))     # Easter Monday (UK)
+
+    # UK bank holidays
+    holidays.add(_nth_weekday(year, 5, 0, 1))    # Early May — 1st Monday May
+    holidays.add(_last_weekday(year, 5, 0))       # Spring — last Monday May
+    holidays.add(_last_weekday(year, 8, 0))       # Summer — last Monday Aug
+
+    return holidays
+
+
+_holiday_cache = {}
+
+
+def is_trading_day(d: date) -> bool:
+    """Check if a date is a valid trading day (not weekend, not US/UK holiday)."""
+    if d.weekday() >= 5:
+        return False
+    year = d.year
+    if year not in _holiday_cache:
+        _holiday_cache[year] = get_holidays(year)
+    return d not in _holiday_cache[year]
+
+
+def next_trading_day(d: date) -> date:
+    """Return d if it's a trading day, otherwise the next trading day."""
+    while not is_trading_day(d):
+        d += timedelta(days=1)
+    return d
+
+
+def generate_dca_dates(start: date, num_tranches: int, interval_days: int = 7) -> list:
+    """Generate a list of valid trading dates for DCA tranches."""
+    dates = []
+    current = start
+    for _ in range(num_tranches):
+        trading = next_trading_day(current)
+        dates.append(trading)
+        current = trading + timedelta(days=interval_days)
+    return dates
 
 
 def load_portfolio():
@@ -139,11 +242,48 @@ def print_result(result, prices):
     print()
 
 
+def print_dca_schedule(start_str: str, num_tranches: int, interval: int, total_budget: float):
+    """Print a DCA schedule with valid trading dates."""
+    start = date.fromisoformat(start_str)
+    dates = generate_dca_dates(start, num_tranches, interval)
+    budget_per = total_budget / num_tranches
+
+    print(f"\n{'=' * 60}")
+    print(f"  DCA-РАСПИСАНИЕ ({num_tranches} траншей, интервал {interval} дней)")
+    print(f"{'=' * 60}")
+    print(f"\n{'Транш':<8} {'Дата':>12} {'День':>4} {'Бюджет':>10} {'Примечание'}")
+    print("-" * 50)
+
+    days_ru = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+    for i, d in enumerate(dates):
+        original = start + timedelta(days=interval * i) if i > 0 else start
+        if i > 0:
+            original = dates[i - 1] + timedelta(days=interval)
+        note = ""
+        if not is_trading_day(original):
+            note = f"← перенос с {original.isoformat()} ({days_ru[original.weekday()]})"
+        print(f"  {i+1:<6} {d.isoformat():>12} {days_ru[d.weekday()]:>4} ${budget_per:>9.0f}  {note}")
+
+    print(f"\n💰 Общий бюджет: ${total_budget:,.0f}")
+    print()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Калькулятор покупки ETF")
     parser.add_argument("--amount", type=float, help="Сумма для покупки (USD)")
     parser.add_argument("--apply", action="store_true", help="Сохранить покупку в portfolio.json")
+    parser.add_argument("--dca-dates", action="store_true", help="Сгенерировать расписание DCA")
+    parser.add_argument("--start", type=str, help="Дата начала DCA (YYYY-MM-DD)")
+    parser.add_argument("--tranches", type=int, default=4, help="Количество траншей")
+    parser.add_argument("--interval", type=int, default=7, help="Интервал между траншами (дней)")
+    parser.add_argument("--budget", type=float, help="Общий бюджет DCA")
     args = parser.parse_args()
+
+    if args.dca_dates:
+        start = args.start or date.today().isoformat()
+        budget = args.budget or 9000
+        print_dca_schedule(start, args.tranches, args.interval, budget)
+        return
 
     data = load_portfolio()
     holdings = data["holdings"]
