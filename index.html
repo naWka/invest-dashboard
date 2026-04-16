@@ -385,9 +385,9 @@ const TradingCalendar = (() => {
 const portfolio = {
   holdings: { SWRD: { shares: 24, avg_price: 47.03 }, EIMI: { shares: 14, avg_price: 49.20 }, USSC: { shares: 3, avg_price: 84.21 } },
   prices: { SWRD: 48.005, EIMI: 49.17, USSC: 84.13 },
-  cash: 4428.76,
+  cash: 11428.76,
   target: { SWRD: 0.70, EIMI: 0.15, USSC: 0.15 },
-  lastUpdated: "2026-04-13",
+  lastUpdated: "2026-04-16",
   accountLimit: 30000,
   transactions: [
     { date: "2026-03-27", time: "16:32", dealId: "634937445", type: "buy", tranche: null, etf: "SWRD", shares: 10, price: 45.67, total: 456.70 },
@@ -397,13 +397,14 @@ const portfolio = {
   ],
   dca: [
     { id: 1, dateISO: "2026-04-13", budget: 1600, status: "done", orders: "SWRD×14, EIMI×14, USSC×3" },
-    { id: 2, dateISO: "2026-04-17", budget: 1476, status: "pending", orders: "SWRD×29, USSC×1" },
-    { id: 3, dateISO: "2026-04-22", budget: 1476, status: "pending", orders: "SWRD×22, EIMI×1, USSC×4" },
-    { id: 4, dateISO: "2026-04-25", budget: 1511, status: "pending", orders: "SWRD×22, EIMI×4, USSC×3" },
-    { id: 5, dateISO: "2026-05-05", phase: 2, budget: 2250, status: "planned", orders: "По алгоритму" },
-    { id: 6, dateISO: "2026-05-12", phase: 2, budget: 2250, status: "planned", orders: "По алгоритму" },
-    { id: 7, dateISO: "2026-05-19", phase: 2, budget: 2250, status: "planned", orders: "По алгоритму" },
-    { id: 8, dateISO: "2026-05-26", phase: 2, budget: 2250, status: "planned", orders: "По алгоритму" }
+    { id: 2, dateISO: "2026-04-17", budget: 1905, status: "pending", orders: "По алгоритму (EIMI пропускать)" },
+    { id: 3, dateISO: "2026-04-24", budget: 1905, status: "pending", orders: "По алгоритму" },
+    { id: 4, dateISO: "2026-05-01", budget: 1905, status: "pending", orders: "По алгоритму" },
+    { id: 5, dateISO: "2026-05-08", budget: 1905, status: "planned", orders: "По алгоритму" },
+    { id: 6, dateISO: "2026-05-15", budget: 1905, status: "planned", orders: "По алгоритму" },
+    { id: 7, dateISO: "2026-05-22", budget: 1904, status: "planned", orders: "По алгоритму" },
+    { id: 8, dateISO: "2026-06-05", phase: 2, budget: 0, status: "planned", orders: "Ждём июньское пополнение $3-6k" },
+    { id: 9, dateISO: "2026-06-12", phase: 2, budget: 0, status: "planned", orders: "Ждём июньское пополнение $3-6k" }
   ]
 };
 

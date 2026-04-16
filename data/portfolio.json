@@ -1,16 +1,16 @@
 {
   "meta": {
-    "plan_version": "3.0",
+    "plan_version": "3.1",
     "broker": "Freedom Finance (Казахстан)",
     "account_limit_usd": 30000,
     "total_budget_usd": 15000,
-    "budget_note": "Второй доход ($3,400) прекратился. Бюджет $15k, дальше по ситуации.",
+    "budget_note": "16.04.26: пришло +$7k SWIFT. Переход на еженедельную пятничную DCA, 6 траншей до 22.05. Июнь — последнее пополнение года $3-6k.",
     "currency": "USD",
     "horizon_years": 7,
     "strategy": "Агрессивный",
     "restrictions": "Без плеча, без шортов, только Acc ETF",
     "exchange": "LSE",
-    "last_updated": "2026-04-15"
+    "last_updated": "2026-04-16"
   },
   "target_allocation": {
     "SWRD": 0.7,
@@ -65,16 +65,19 @@
     }
   },
   "prices": {
-    "SWRD": 49.59,
-    "EIMI": 51.18,
-    "USSC": 85.62,
-    "as_of": "2026-04-16"
+    "SWRD": 47.96,
+    "EIMI": 49.12,
+    "USSC": 84.14,
+    "as_of": "2026-04-13"
   },
-  "cash_usd": 4428.76,
+  "cash_usd": 11428.76,
   "dca_plan": {
     "total_budget": 15000,
-    "phase1_budget": 6000,
-    "phase2_budget": 9000,
+    "deployed_usd": 1600,
+    "to_deploy_now_usd": 11428.76,
+    "to_deploy_june_usd": "3000-6000",
+    "cadence": "Еженедельно по пятницам",
+    "rationale": "Best practice: Vanguard/Maggiulli — short DCA window (4-8 недель) сохраняет большую часть преимущества lump-sum при меньшем регрет-риске. Пятницы: без переноса через выходные, решение принимается в конце недели.",
     "tranches": [
       {
         "id": 1,
@@ -100,91 +103,68 @@
       {
         "id": 2,
         "date_planned": "2026-04-17",
+        "day_of_week": "Fri",
         "status": "pending",
-        "budget": 1476,
-        "planned_orders": {
-          "SWRD": {
-            "shares": 29,
-            "price_est": 48.0
-          },
-          "EIMI": {
-            "shares": 0,
-            "price_est": 49.17
-          },
-          "USSC": {
-            "shares": 1,
-            "price_est": 84.13
-          }
-        }
+        "budget": 1905,
+        "note": "Рассчитать по алгоритму. EIMI пропускать (перекуплен), SWRD в приоритете."
       },
       {
         "id": 3,
-        "date_planned": "2026-04-22",
+        "date_planned": "2026-04-24",
+        "day_of_week": "Fri",
         "status": "pending",
-        "budget": 1476,
-        "planned_orders": {
-          "SWRD": {
-            "shares": 22,
-            "price_est": 48.0
-          },
-          "EIMI": {
-            "shares": 1,
-            "price_est": 49.17
-          },
-          "USSC": {
-            "shares": 4,
-            "price_est": 84.13
-          }
-        }
+        "budget": 1905,
+        "note": "Рассчитать по алгоритму."
       },
       {
         "id": 4,
-        "date_planned": "2026-04-25",
+        "date_planned": "2026-05-01",
+        "day_of_week": "Fri",
         "status": "pending",
-        "budget": 1511,
-        "planned_orders": {
-          "SWRD": {
-            "shares": 22,
-            "price_est": 48.0
-          },
-          "EIMI": {
-            "shares": 4,
-            "price_est": 49.17
-          },
-          "USSC": {
-            "shares": 3,
-            "price_est": 84.13
-          }
-        }
+        "budget": 1905,
+        "note": "Рассчитать по алгоритму."
       },
       {
         "id": 5,
-        "phase": 2,
-        "date_planned": "2026-05-05",
+        "date_planned": "2026-05-08",
+        "day_of_week": "Fri",
         "status": "planned",
-        "budget": 2250,
-        "note": "Фаза 2. Рассчитать по алгоритму ближе к дате."
+        "budget": 1905,
+        "note": "Рассчитать по алгоритму."
       },
       {
         "id": 6,
-        "phase": 2,
-        "date_planned": "2026-05-12",
+        "date_planned": "2026-05-15",
+        "day_of_week": "Fri",
         "status": "planned",
-        "budget": 2250
+        "budget": 1905,
+        "note": "Рассчитать по алгоритму."
       },
       {
         "id": 7,
-        "phase": 2,
-        "date_planned": "2026-05-19",
+        "date_planned": "2026-05-22",
+        "day_of_week": "Fri",
         "status": "planned",
-        "budget": 2250
+        "budget": 1903.76,
+        "note": "Последний транш текущего кэша."
       },
       {
         "id": 8,
-        "phase": 2,
-        "date_planned": "2026-05-26",
-        "status": "planned",
-        "budget": 2250
+        "phase": "june",
+        "date_planned": "2026-06-05",
+        "day_of_week": "Fri",
+        "status": "tentative",
+        "budget_range": [1500, 3000],
+        "note": "Июнь: 1-й из 2 финальных траншей года. Бюджет после прихода $3-6k."
+      },
+      {
+        "id": 9,
+        "phase": "june",
+        "date_planned": "2026-06-12",
+        "day_of_week": "Fri",
+        "status": "tentative",
+        "budget_range": [1500, 3000],
+        "note": "Июнь: 2-й из 2 финальных траншей года. Бюджет после прихода $3-6k."
       }
     ]
   },
