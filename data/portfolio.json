@@ -10,7 +10,7 @@
     "strategy": "Агрессивный",
     "restrictions": "Без плеча, без шортов, только Acc ETF",
     "exchange": "LSE",
-    "last_updated": "2026-04-16"
+    "last_updated": "2026-04-17"
   },
   "target_allocation": {
     "SWRD": 0.7,
@@ -52,29 +52,29 @@
   },
   "holdings": {
     "SWRD": {
-      "shares": 24,
-      "avg_price": 47.03
+      "shares": 57,
+      "avg_price": 48.53
     },
     "EIMI": {
       "shares": 14,
       "avg_price": 49.2
     },
     "USSC": {
-      "shares": 3,
-      "avg_price": 84.21
+      "shares": 6,
+      "avg_price": 85.15
     }
   },
   "prices": {
-    "SWRD": 47.96,
+    "SWRD": 49.62,
     "EIMI": 49.12,
-    "USSC": 84.14,
-    "as_of": "2026-04-13"
+    "USSC": 86.09,
+    "as_of": "2026-04-17"
   },
-  "cash_usd": 11428.76,
+  "cash_usd": 9533.03,
   "dca_plan": {
     "total_budget": 15000,
-    "deployed_usd": 1600,
-    "to_deploy_now_usd": 11428.76,
+    "deployed_usd": 3495.73,
+    "to_deploy_now_usd": 9533.03,
     "to_deploy_june_usd": "3000-6000",
     "cadence": "Еженедельно по пятницам",
     "rationale": "Best practice: Vanguard/Maggiulli — short DCA window (4-8 недель) сохраняет большую часть преимущества lump-sum при меньшем регрет-риске. Пятницы: без переноса через выходные, решение принимается в конце недели.",
@@ -102,11 +102,22 @@
       },
       {
         "id": 2,
-        "date_planned": "2026-04-17",
+        "date": "2026-04-17",
         "day_of_week": "Fri",
-        "status": "pending",
+        "status": "completed",
         "budget": 1905,
-        "note": "Рассчитать по алгоритму. EIMI пропускать (перекуплен), SWRD в приоритете."
+        "actual_spent": 1895.73,
+        "orders": {
+          "SWRD": {
+            "shares": 33,
+            "avg_price": 49.62
+          },
+          "USSC": {
+            "shares": 3,
+            "avg_price": 86.09
+          }
+        },
+        "note": "EIMI пропущен (перекуплен в транше 1). SWRD приоритет — 33 шт."
       },
       {
         "id": 3,
@@ -212,6 +223,28 @@
       "shares": 3,
       "price": 84.21,
       "total": 252.63
+    },
+    {
+      "date": "2026-04-17",
+      "time": "12:02:54",
+      "broker_deal_id": "642057227",
+      "type": "buy",
+      "tranche": 2,
+      "etf": "SWRD",
+      "shares": 33,
+      "price": 49.62,
+      "total": 1637.46
+    },
+    {
+      "date": "2026-04-17",
+      "time": "12:03:32",
+      "broker_deal_id": "642057284",
+      "type": "buy",
+      "tranche": 2,
+      "etf": "USSC",
+      "shares": 3,
+      "price": 86.09,
+      "total": 258.27
     }
   ]
 }
