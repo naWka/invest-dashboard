@@ -383,21 +383,23 @@ const TradingCalendar = (() => {
 
 // ── DATA ──
 const portfolio = {
-  holdings: { SWRD: { shares: 24, avg_price: 47.03 }, EIMI: { shares: 14, avg_price: 49.20 }, USSC: { shares: 3, avg_price: 84.21 } },
-  prices: { SWRD: 48.005, EIMI: 49.17, USSC: 84.13 },
-  cash: 11428.76,
+  holdings: { SWRD: { shares: 57, avg_price: 48.53 }, EIMI: { shares: 14, avg_price: 49.20 }, USSC: { shares: 6, avg_price: 85.15 } },
+  prices: { SWRD: 49.62, EIMI: 49.12, USSC: 86.09 },
+  cash: 9533.03,
   target: { SWRD: 0.70, EIMI: 0.15, USSC: 0.15 },
-  lastUpdated: "2026-04-16",
+  lastUpdated: "2026-04-17",
   accountLimit: 30000,
   transactions: [
     { date: "2026-03-27", time: "16:32", dealId: "634937445", type: "buy", tranche: null, etf: "SWRD", shares: 10, price: 45.67, total: 456.70 },
     { date: "2026-04-13", time: "16:02", dealId: "640032274", type: "buy", tranche: 1, etf: "SWRD", shares: 14, price: 48.005, total: 672.07 },
     { date: "2026-04-13", time: "16:04", dealId: "640032469", type: "buy", tranche: 1, etf: "EIMI", shares: 14, price: 49.20, total: 688.80 },
-    { date: "2026-04-13", time: "16:05", dealId: "640032572", type: "buy", tranche: 1, etf: "USSC", shares: 3, price: 84.21, total: 252.63 }
+    { date: "2026-04-13", time: "16:05", dealId: "640032572", type: "buy", tranche: 1, etf: "USSC", shares: 3, price: 84.21, total: 252.63 },
+    { date: "2026-04-17", time: "12:02", dealId: "642057227", type: "buy", tranche: 2, etf: "SWRD", shares: 33, price: 49.62, total: 1637.46 },
+    { date: "2026-04-17", time: "12:03", dealId: "642057284", type: "buy", tranche: 2, etf: "USSC", shares: 3, price: 86.09, total: 258.27 }
   ],
   dca: [
     { id: 1, dateISO: "2026-04-13", budget: 1600, status: "done", orders: "SWRD×14, EIMI×14, USSC×3" },
-    { id: 2, dateISO: "2026-04-17", budget: 1905, status: "pending", orders: "По алгоритму (EIMI пропускать)" },
+    { id: 2, dateISO: "2026-04-17", budget: 1905, status: "done", orders: "SWRD×33, USSC×3 (EIMI пропущен)" },
     { id: 3, dateISO: "2026-04-24", budget: 1905, status: "pending", orders: "По алгоритму" },
     { id: 4, dateISO: "2026-05-01", budget: 1905, status: "pending", orders: "По алгоритму" },
     { id: 5, dateISO: "2026-05-08", budget: 1905, status: "planned", orders: "По алгоритму" },
