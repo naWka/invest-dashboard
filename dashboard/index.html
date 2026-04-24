@@ -383,11 +383,11 @@ const TradingCalendar = (() => {
 
 // ── DATA ──
 const portfolio = {
-  holdings: { SWRD: { shares: 57, avg_price: 48.53 }, EIMI: { shares: 14, avg_price: 49.20 }, USSC: { shares: 6, avg_price: 85.15 } },
-  prices: { SWRD: 49.62, EIMI: 49.12, USSC: 86.09 },
-  cash: 9533.03,
+  holdings: { SWRD: { shares: 85, avg_price: 48.95 }, EIMI: { shares: 17, avg_price: 49.60 }, USSC: { shares: 10, avg_price: 85.90 } },
+  prices: { SWRD: 49.81, EIMI: 51.48, USSC: 87.03 },
+  cash: 7635.79,
   target: { SWRD: 0.70, EIMI: 0.15, USSC: 0.15 },
-  lastUpdated: "2026-04-17",
+  lastUpdated: "2026-04-24",
   accountLimit: 30000,
   transactions: [
     { date: "2026-03-27", time: "16:32", dealId: "634937445", type: "buy", tranche: null, etf: "SWRD", shares: 10, price: 45.67, total: 456.70 },
@@ -395,12 +395,15 @@ const portfolio = {
     { date: "2026-04-13", time: "16:04", dealId: "640032469", type: "buy", tranche: 1, etf: "EIMI", shares: 14, price: 49.20, total: 688.80 },
     { date: "2026-04-13", time: "16:05", dealId: "640032572", type: "buy", tranche: 1, etf: "USSC", shares: 3, price: 84.21, total: 252.63 },
     { date: "2026-04-17", time: "12:02", dealId: "642057227", type: "buy", tranche: 2, etf: "SWRD", shares: 33, price: 49.62, total: 1637.46 },
-    { date: "2026-04-17", time: "12:03", dealId: "642057284", type: "buy", tranche: 2, etf: "USSC", shares: 3, price: 86.09, total: 258.27 }
+    { date: "2026-04-17", time: "12:03", dealId: "642057284", type: "buy", tranche: 2, etf: "USSC", shares: 3, price: 86.09, total: 258.27 },
+    { date: "2026-04-24", time: "15:08", dealId: "644694908", type: "buy", tranche: 3, etf: "SWRD", shares: 28, price: 49.81, total: 1394.68 },
+    { date: "2026-04-24", time: "15:09", dealId: "644694929", type: "buy", tranche: 3, etf: "EIMI", shares: 3, price: 51.48, total: 154.44 },
+    { date: "2026-04-24", time: "15:09", dealId: "644694941", type: "buy", tranche: 3, etf: "USSC", shares: 4, price: 87.03, total: 348.12 }
   ],
   dca: [
     { id: 1, dateISO: "2026-04-13", budget: 1600, status: "done", orders: "SWRD×14, EIMI×14, USSC×3" },
     { id: 2, dateISO: "2026-04-17", budget: 1905, status: "done", orders: "SWRD×33, USSC×3 (EIMI пропущен)" },
-    { id: 3, dateISO: "2026-04-24", budget: 1905, status: "pending", orders: "По алгоритму" },
+    { id: 3, dateISO: "2026-04-24", budget: 1905, status: "done", orders: "SWRD×28, EIMI×3, USSC×4" },
     { id: 4, dateISO: "2026-05-01", budget: 1905, status: "pending", orders: "По алгоритму" },
     { id: 5, dateISO: "2026-05-08", budget: 1905, status: "planned", orders: "По алгоритму" },
     { id: 6, dateISO: "2026-05-15", budget: 1905, status: "planned", orders: "По алгоритму" },
