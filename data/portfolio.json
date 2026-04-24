@@ -57,17 +57,17 @@
     },
     "EIMI": {
       "shares": 17,
-      "avg_price": 49.60
+      "avg_price": 49.6
     },
     "USSC": {
       "shares": 10,
-      "avg_price": 85.90
+      "avg_price": 85.9
     }
   },
   "prices": {
-    "SWRD": 49.81,
-    "EIMI": 51.48,
-    "USSC": 87.03,
+    "SWRD": 49.935,
+    "EIMI": 51.96,
+    "USSC": 87.1,
     "as_of": "2026-04-24"
   },
   "cash_usd": 7635.79,
@@ -180,7 +180,10 @@
         "date_planned": "2026-06-05",
         "day_of_week": "Fri",
         "status": "tentative",
-        "budget_range": [1500, 3000],
+        "budget_range": [
+          1500,
+          3000
+        ],
         "note": "Июнь: 1-й из 2 финальных траншей года. Бюджет после прихода $3-6k."
       },
       {
@@ -189,7 +192,10 @@
         "date_planned": "2026-06-12",
         "day_of_week": "Fri",
         "status": "tentative",
-        "budget_range": [1500, 3000],
+        "budget_range": [
+          1500,
+          3000
+        ],
         "note": "Июнь: 2-й из 2 финальных траншей года. Бюджет после прихода $3-6k."
       }
     ]
