@@ -10,7 +10,7 @@
     "strategy": "Агрессивный",
     "restrictions": "Без плеча, без шортов, только Acc ETF",
     "exchange": "LSE",
-    "last_updated": "2026-04-17"
+    "last_updated": "2026-04-24"
   },
   "target_allocation": {
     "SWRD": 0.7,
@@ -52,25 +52,25 @@
   },
   "holdings": {
     "SWRD": {
-      "shares": 57,
-      "avg_price": 48.53
+      "shares": 85,
+      "avg_price": 48.95
     },
     "EIMI": {
-      "shares": 14,
-      "avg_price": 49.2
+      "shares": 17,
+      "avg_price": 49.60
     },
     "USSC": {
-      "shares": 6,
-      "avg_price": 85.15
+      "shares": 10,
+      "avg_price": 85.90
     }
   },
   "prices": {
-    "SWRD": 50.04,
-    "EIMI": 51.59,
-    "USSC": 87.44,
-    "as_of": "2026-04-23"
+    "SWRD": 49.81,
+    "EIMI": 51.48,
+    "USSC": 87.03,
+    "as_of": "2026-04-24"
   },
-  "cash_usd": 9533.03,
+  "cash_usd": 7635.79,
   "dca_plan": {
     "total_budget": 15000,
     "deployed_usd": 3495.73,
@@ -121,11 +121,26 @@
       },
       {
         "id": 3,
-        "date_planned": "2026-04-24",
+        "date": "2026-04-24",
         "day_of_week": "Fri",
-        "status": "pending",
+        "status": "completed",
         "budget": 1905,
-        "note": "Рассчитать по алгоритму."
+        "actual_spent": 1897.24,
+        "orders": {
+          "SWRD": {
+            "shares": 28,
+            "avg_price": 49.81
+          },
+          "EIMI": {
+            "shares": 3,
+            "avg_price": 51.48
+          },
+          "USSC": {
+            "shares": 4,
+            "avg_price": 87.03
+          }
+        },
+        "note": "SWRD 28шт, EIMI 3шт (докупка), USSC 4шт."
       },
       {
         "id": 4,
@@ -165,10 +180,7 @@
         "date_planned": "2026-06-05",
         "day_of_week": "Fri",
         "status": "tentative",
-        "budget_range": [
-          1500,
-          3000
-        ],
+        "budget_range": [1500, 3000],
         "note": "Июнь: 1-й из 2 финальных траншей года. Бюджет после прихода $3-6k."
       },
       {
@@ -177,10 +189,7 @@
         "date_planned": "2026-06-12",
         "day_of_week": "Fri",
         "status": "tentative",
-        "budget_range": [
-          1500,
-          3000
-        ],
+        "budget_range": [1500, 3000],
         "note": "Июнь: 2-й из 2 финальных траншей года. Бюджет после прихода $3-6k."
       }
     ]
@@ -251,6 +260,39 @@
       "shares": 3,
       "price": 86.09,
       "total": 258.27
+    },
+    {
+      "date": "2026-04-24",
+      "time": "15:08:39",
+      "broker_deal_id": "644694908",
+      "type": "buy",
+      "tranche": 3,
+      "etf": "SWRD",
+      "shares": 28,
+      "price": 49.81,
+      "total": 1394.68
+    },
+    {
+      "date": "2026-04-24",
+      "time": "15:09:00",
+      "broker_deal_id": "644694929",
+      "type": "buy",
+      "tranche": 3,
+      "etf": "EIMI",
+      "shares": 3,
+      "price": 51.48,
+      "total": 154.44
+    },
+    {
+      "date": "2026-04-24",
+      "time": "15:09:21",
+      "broker_deal_id": "644694941",
+      "type": "buy",
+      "tranche": 3,
+      "etf": "USSC",
+      "shares": 4,
+      "price": 87.03,
+      "total": 348.12
     }
   ]
 }
