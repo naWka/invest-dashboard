@@ -383,11 +383,11 @@ const TradingCalendar = (() => {
 
 // ── DATA ──
 const portfolio = {
-  holdings: { SWRD: { shares: 136, avg_price: 49.69 }, EIMI: { shares: 27, avg_price: 51.05 }, USSC: { shares: 17, avg_price: 86.78 } },
-  prices: { SWRD: 51.36, EIMI: 54.83, USSC: 87.86 },
-  cash: 3887.54,
+  holdings: { SWRD: { shares: 161, avg_price: 49.96 }, EIMI: { shares: 33, avg_price: 51.44 }, USSC: { shares: 20, avg_price: 86.77 } },
+  prices: { SWRD: 51.41, EIMI: 53.22, USSC: 86.69 },
+  cash: 2022.90,
   target: { SWRD: 0.70, EIMI: 0.15, USSC: 0.15 },
-  lastUpdated: "2026-05-08",
+  lastUpdated: "2026-05-15",
   accountLimit: 15000,
   transactions: [
     { date: "2026-03-27", time: "16:32", dealId: "634937445", type: "buy", tranche: null, etf: "SWRD", shares: 10, price: 45.67, total: 456.70 },
@@ -404,7 +404,10 @@ const portfolio = {
     { date: "2026-05-01", time: "17:07", dealId: "647237713", type: "buy", tranche: 4, etf: "USSC", shares: 3, price: 88.27, total: 264.81 },
     { date: "2026-05-08", time: "14:49", dealId: "649886685", type: "buy", tranche: 5, etf: "SWRD", shares: 24, price: 51.36, total: 1232.64 },
     { date: "2026-05-08", time: "14:49", dealId: "649886708", type: "buy", tranche: 5, etf: "EIMI", shares: 5, price: 54.83, total: 274.15 },
-    { date: "2026-05-08", time: "14:49", dealId: "649886726", type: "buy", tranche: 5, etf: "USSC", shares: 4, price: 87.86, total: 351.44 }
+    { date: "2026-05-08", time: "14:49", dealId: "649886726", type: "buy", tranche: 5, etf: "USSC", shares: 4, price: 87.86, total: 351.44 },
+    { date: "2026-05-15", time: "14:37", dealId: "652648368", type: "buy", tranche: 6, etf: "SWRD", shares: 25, price: 51.41, total: 1285.25 },
+    { date: "2026-05-15", time: "14:37", dealId: "652648397", type: "buy", tranche: 6, etf: "EIMI", shares: 6, price: 53.22, total: 319.32 },
+    { date: "2026-05-15", time: "14:37", dealId: "652648420", type: "buy", tranche: 6, etf: "USSC", shares: 3, price: 86.69, total: 260.07 }
   ],
   dca: [
     { id: 1, dateISO: "2026-04-13", budget: 1600, status: "done", orders: "SWRD×14, EIMI×14, USSC×3" },
@@ -412,7 +415,7 @@ const portfolio = {
     { id: 3, dateISO: "2026-04-24", budget: 1905, status: "done", orders: "SWRD×28, EIMI×3, USSC×4" },
     { id: 4, dateISO: "2026-05-01", budget: 1905, status: "done", orders: "SWRD×27, EIMI×5, USSC×3" },
     { id: 5, dateISO: "2026-05-08", budget: 1905, status: "done", orders: "SWRD×24, EIMI×5, USSC×4" },
-    { id: 6, dateISO: "2026-05-15", budget: 1905, status: "planned", orders: "По алгоритму" },
+    { id: 6, dateISO: "2026-05-15", budget: 1905, status: "done", orders: "SWRD×25, EIMI×6, USSC×3" },
     { id: 7, dateISO: "2026-05-22", budget: 1904, status: "planned", orders: "По алгоритму" },
     { id: 8, dateISO: "2026-06-05", phase: 2, budget: 0, status: "planned", orders: "Ждём июньское пополнение $3-6k" },
     { id: 9, dateISO: "2026-06-12", phase: 2, budget: 0, status: "planned", orders: "Ждём июньское пополнение $3-6k" }
