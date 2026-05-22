@@ -169,6 +169,20 @@
 
 <div class="stats-row" id="stats-row"></div>
 
+<div class="card" style="margin-bottom:24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+    <h2 style="margin:0">📈 Стоимость портфеля</h2>
+    <div id="perf-range" style="display:flex;gap:6px"></div>
+  </div>
+  <div id="perf-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:14px 0 18px"></div>
+  <div class="chart-container" style="height:360px">
+    <canvas id="perfChart"></canvas>
+  </div>
+  <div style="font-size:12px;color:var(--text2);margin-top:10px">
+    Бенчмарк: те же даты и суммы покупок, но 100% в SWRD (MSCI World). Если зелёная линия выше синей — выбранная аллокация 70/15/15 обгоняет «чистый» MSCI World и наоборот.
+  </div>
+</div>
+
 <div class="grid-2">
   <div class="card">
     <h2>Аллокация портфеля</h2>
@@ -498,6 +512,147 @@ function renderTarget() {
   });
 }
 
+// ── PERFORMANCE CHART (portfolio value vs invested vs benchmark) ──
+let _perfData = null;
+let _perfRange = '1M'; // default
+
+async function loadPerformance() {
+  try {
+    const r = await fetch('data/history.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('history.json not found');
+    _perfData = await r.json();
+    renderPerformance();
+  } catch (e) {
+    document.getElementById('perf-summary').innerHTML =
+      `<div style="color:var(--text2);font-size:13px;grid-column:1/-1">История пока не сгенерирована (нет data/history.json).</div>`;
+  }
+}
+
+function _filterSeries(series, range) {
+  if (range === 'ALL') return series;
+  const last = new Date(series[series.length - 1].date);
+  const days = range === '1W' ? 7 : range === '1M' ? 30 : range === '3M' ? 90 : 9999;
+  const cutoff = new Date(last.getTime() - days * 86400000);
+  return series.filter(p => new Date(p.date) >= cutoff);
+}
+
+function renderPerformance() {
+  if (!_perfData) return;
+  const ranges = ['1W', '1M', '3M', 'ALL'];
+  document.getElementById('perf-range').innerHTML = ranges.map(r => `
+    <button onclick="setPerfRange('${r}')" style="background:${r === _perfRange ? 'var(--blue)' : 'transparent'};color:${r === _perfRange ? 'white' : 'var(--text2)'};border:1px solid var(--border);padding:6px 12px;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;width:auto">${r}</button>
+  `).join('');
+
+  const series = _filterSeries(_perfData.series, _perfRange);
+  const last = series[series.length - 1];
+  const first = series[0];
+
+  // Performance vs benchmark
+  const portfDelta = last.portfolio - last.invested;
+  const portfPct = last.invested > 0 ? (last.portfolio / last.invested - 1) * 100 : 0;
+  const vsBench = last.portfolio - last.benchmark;
+  const vsBenchPct = last.benchmark > 0 ? (last.portfolio / last.benchmark - 1) * 100 : 0;
+
+  const fmt = (v) => `$${v.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  const sign = (v) => v >= 0 ? '+' : '';
+  const col = (v) => v >= 0 ? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('perf-summary').innerHTML = `
+    <div class="stat-card" style="padding:14px">
+      <div class="label">Стоимость</div>
+      <div class="value" style="font-size:22px">${fmt(last.portfolio)}</div>
+      <div class="sub">на ${last.date}</div>
+    </div>
+    <div class="stat-card" style="padding:14px">
+      <div class="label">Вложено</div>
+      <div class="value" style="font-size:22px">${fmt(last.invested)}</div>
+      <div class="sub">${_perfData.series.length} торг. дней</div>
+    </div>
+    <div class="stat-card" style="padding:14px">
+      <div class="label">P/L</div>
+      <div class="value" style="font-size:22px;color:${col(portfDelta)}">${sign(portfDelta)}${fmt(portfDelta)}</div>
+      <div class="sub" style="color:${col(portfDelta)}">${sign(portfPct)}${portfPct.toFixed(2)}%</div>
+    </div>
+    <div class="stat-card" style="padding:14px">
+      <div class="label">vs 100% SWRD</div>
+      <div class="value" style="font-size:22px;color:${col(vsBench)}">${sign(vsBench)}${fmt(vsBench)}</div>
+      <div class="sub" style="color:${col(vsBench)}">${sign(vsBenchPct)}${vsBenchPct.toFixed(2)}%</div>
+    </div>
+  `;
+
+  Chart.getChart('perfChart')?.destroy();
+  const ctx = document.getElementById('perfChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: series.map(s => s.date),
+      datasets: [
+        {
+          label: 'Портфель',
+          data: series.map(s => s.portfolio),
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34,197,94,0.12)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.25,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+        },
+        {
+          label: 'Вложено (cost basis)',
+          data: series.map(s => s.invested),
+          borderColor: '#8b8fa3',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          fill: false,
+          stepped: true,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+        {
+          label: 'Бенчмарк (100% SWRD)',
+          data: series.map(s => s.benchmark),
+          borderColor: '#3b82f6',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.25,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+        },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#8b8fa3', usePointStyle: true, padding: 14 } },
+        tooltip: {
+          backgroundColor: '#1a1d27', borderColor: '#2a2d3a', borderWidth: 1,
+          titleColor: '#e1e4ed', bodyColor: '#e1e4ed', padding: 10,
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          ticks: { color: '#8b8fa3', callback: v => '$' + (v / 1000).toFixed(1) + 'k' },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+        },
+        x: {
+          ticks: { color: '#8b8fa3', maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+          grid: { display: false },
+        },
+      },
+    },
+  });
+}
+
+function setPerfRange(r) {
+  _perfRange = r;
+  renderPerformance();
+}
+
 // ── HOLDINGS TABLE ──
 function renderHoldings() {
   const total = totalVal();
@@ -750,6 +905,7 @@ function reRender() {
   Chart.getChart('targetChart')?.destroy();
   renderAllocation();
   renderTarget();
+  if (_perfData) renderPerformance();
 }
 
 function showToast(msg, isError) {
@@ -802,6 +958,7 @@ renderHoldings();
 renderDCA();
 renderProgress();
 renderTx();
+loadPerformance();
 
 // Автоматически подтягиваем свежие цены при загрузке страницы
 refreshPrices();

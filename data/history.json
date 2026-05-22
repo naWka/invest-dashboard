@@ -1,0 +1,331 @@
+{
+  "updated": "2026-05-22",
+  "tickers": {
+    "SWRD": "SWRD.L",
+    "EIMI": "EIMI.L",
+    "USSC": "USSC.L"
+  },
+  "benchmark_note": "100% SWRD с теми же cash flow (DCA)",
+  "series": [
+    {
+      "date": "2026-03-25",
+      "portfolio": 0.0,
+      "invested": 0.0,
+      "benchmark": 0.0,
+      "pnl": 0.0,
+      "pnl_pct": 0.0
+    },
+    {
+      "date": "2026-03-26",
+      "portfolio": 0.0,
+      "invested": 0.0,
+      "benchmark": 0.0,
+      "pnl": 0.0,
+      "pnl_pct": 0.0
+    },
+    {
+      "date": "2026-03-27",
+      "portfolio": 452.5,
+      "invested": 456.7,
+      "benchmark": 456.7,
+      "pnl": -4.2,
+      "pnl_pct": -0.92
+    },
+    {
+      "date": "2026-03-30",
+      "portfolio": 452.9,
+      "invested": 456.7,
+      "benchmark": 457.1,
+      "pnl": -3.8,
+      "pnl_pct": -0.83
+    },
+    {
+      "date": "2026-03-31",
+      "portfolio": 455.4,
+      "invested": 456.7,
+      "benchmark": 459.63,
+      "pnl": -1.3,
+      "pnl_pct": -0.28
+    },
+    {
+      "date": "2026-04-01",
+      "portfolio": 468.25,
+      "invested": 456.7,
+      "benchmark": 472.6,
+      "pnl": 11.55,
+      "pnl_pct": 2.53
+    },
+    {
+      "date": "2026-04-02",
+      "portfolio": 465.88,
+      "invested": 456.7,
+      "benchmark": 470.2,
+      "pnl": 9.18,
+      "pnl_pct": 2.01
+    },
+    {
+      "date": "2026-04-07",
+      "portfolio": 464.45,
+      "invested": 456.7,
+      "benchmark": 468.76,
+      "pnl": 7.75,
+      "pnl_pct": 1.7
+    },
+    {
+      "date": "2026-04-08",
+      "portfolio": 479.8,
+      "invested": 456.7,
+      "benchmark": 484.25,
+      "pnl": 23.1,
+      "pnl_pct": 5.06
+    },
+    {
+      "date": "2026-04-09",
+      "portfolio": 481.6,
+      "invested": 456.7,
+      "benchmark": 486.07,
+      "pnl": 24.9,
+      "pnl_pct": 5.45
+    },
+    {
+      "date": "2026-04-10",
+      "portfolio": 484.0,
+      "invested": 456.7,
+      "benchmark": 488.49,
+      "pnl": 27.3,
+      "pnl_pct": 5.98
+    },
+    {
+      "date": "2026-04-13",
+      "portfolio": 2104.62,
+      "invested": 2070.2,
+      "benchmark": 2100.83,
+      "pnl": 34.43,
+      "pnl_pct": 1.66
+    },
+    {
+      "date": "2026-04-14",
+      "portfolio": 2149.11,
+      "invested": 2070.2,
+      "benchmark": 2140.21,
+      "pnl": 78.91,
+      "pnl_pct": 3.81
+    },
+    {
+      "date": "2026-04-15",
+      "portfolio": 2153.43,
+      "invested": 2070.2,
+      "benchmark": 2148.91,
+      "pnl": 83.23,
+      "pnl_pct": 4.02
+    },
+    {
+      "date": "2026-04-16",
+      "portfolio": 2163.54,
+      "invested": 2070.2,
+      "benchmark": 2157.61,
+      "pnl": 93.34,
+      "pnl_pct": 4.51
+    },
+    {
+      "date": "2026-04-17",
+      "portfolio": 4126.23,
+      "invested": 3965.93,
+      "benchmark": 4085.54,
+      "pnl": 160.3,
+      "pnl_pct": 4.04
+    },
+    {
+      "date": "2026-04-20",
+      "portfolio": 4103.67,
+      "invested": 3965.93,
+      "benchmark": 4064.43,
+      "pnl": 137.74,
+      "pnl_pct": 3.47
+    },
+    {
+      "date": "2026-04-21",
+      "portfolio": 4086.19,
+      "invested": 3965.93,
+      "benchmark": 4045.36,
+      "pnl": 120.26,
+      "pnl_pct": 3.03
+    },
+    {
+      "date": "2026-04-22",
+      "portfolio": 4099.82,
+      "invested": 3965.93,
+      "benchmark": 4055.5,
+      "pnl": 133.89,
+      "pnl_pct": 3.38
+    },
+    {
+      "date": "2026-04-23",
+      "portfolio": 4099.18,
+      "invested": 3965.93,
+      "benchmark": 4062.0,
+      "pnl": 133.25,
+      "pnl_pct": 3.36
+    },
+    {
+      "date": "2026-04-24",
+      "portfolio": 5998.8,
+      "invested": 5863.17,
+      "benchmark": 5950.71,
+      "pnl": 135.63,
+      "pnl_pct": 2.31
+    },
+    {
+      "date": "2026-04-27",
+      "portfolio": 6010.13,
+      "invested": 5863.17,
+      "benchmark": 5958.46,
+      "pnl": 146.96,
+      "pnl_pct": 2.51
+    },
+    {
+      "date": "2026-04-28",
+      "portfolio": 5974.1,
+      "invested": 5863.17,
+      "benchmark": 5929.86,
+      "pnl": 110.93,
+      "pnl_pct": 1.89
+    },
+    {
+      "date": "2026-04-29",
+      "portfolio": 5972.48,
+      "invested": 5863.17,
+      "benchmark": 5925.69,
+      "pnl": 109.31,
+      "pnl_pct": 1.86
+    },
+    {
+      "date": "2026-04-30",
+      "portfolio": 6027.49,
+      "invested": 5863.17,
+      "benchmark": 5981.1,
+      "pnl": 164.32,
+      "pnl_pct": 2.8
+    },
+    {
+      "date": "2026-05-01",
+      "portfolio": 7980.39,
+      "invested": 7753.19,
+      "benchmark": 7929.51,
+      "pnl": 227.2,
+      "pnl_pct": 2.93
+    },
+    {
+      "date": "2026-05-05",
+      "portfolio": 7989.9,
+      "invested": 7753.19,
+      "benchmark": 7915.43,
+      "pnl": 236.71,
+      "pnl_pct": 3.05
+    },
+    {
+      "date": "2026-05-06",
+      "portfolio": 8118.77,
+      "invested": 7753.19,
+      "benchmark": 8034.34,
+      "pnl": 365.58,
+      "pnl_pct": 4.72
+    },
+    {
+      "date": "2026-05-07",
+      "portfolio": 8119.12,
+      "invested": 7753.19,
+      "benchmark": 8046.86,
+      "pnl": 365.93,
+      "pnl_pct": 4.72
+    },
+    {
+      "date": "2026-05-08",
+      "portfolio": 9988.05,
+      "invested": 9611.42,
+      "benchmark": 9903.53,
+      "pnl": 376.63,
+      "pnl_pct": 3.92
+    },
+    {
+      "date": "2026-05-11",
+      "portfolio": 10016.84,
+      "invested": 9611.42,
+      "benchmark": 9944.94,
+      "pnl": 405.42,
+      "pnl_pct": 4.22
+    },
+    {
+      "date": "2026-05-12",
+      "portfolio": 9862.95,
+      "invested": 9611.42,
+      "benchmark": 9843.82,
+      "pnl": 251.53,
+      "pnl_pct": 2.62
+    },
+    {
+      "date": "2026-05-13",
+      "portfolio": 9957.91,
+      "invested": 9611.42,
+      "benchmark": 9921.82,
+      "pnl": 346.49,
+      "pnl_pct": 3.6
+    },
+    {
+      "date": "2026-05-14",
+      "portfolio": 10057.91,
+      "invested": 9611.42,
+      "benchmark": 10032.57,
+      "pnl": 446.49,
+      "pnl_pct": 4.65
+    },
+    {
+      "date": "2026-05-15",
+      "portfolio": 11757.56,
+      "invested": 11476.06,
+      "benchmark": 11766.24,
+      "pnl": 281.5,
+      "pnl_pct": 2.45
+    },
+    {
+      "date": "2026-05-18",
+      "portfolio": 11714.54,
+      "invested": 11476.06,
+      "benchmark": 11706.73,
+      "pnl": 238.48,
+      "pnl_pct": 2.08
+    },
+    {
+      "date": "2026-05-19",
+      "portfolio": 11646.74,
+      "invested": 11476.06,
+      "benchmark": 11674.69,
+      "pnl": 170.68,
+      "pnl_pct": 1.49
+    },
+    {
+      "date": "2026-05-20",
+      "portfolio": 11798.88,
+      "invested": 11476.06,
+      "benchmark": 11807.44,
+      "pnl": 322.82,
+      "pnl_pct": 2.81
+    },
+    {
+      "date": "2026-05-21",
+      "portfolio": 11773.94,
+      "invested": 11476.06,
+      "benchmark": 11782.26,
+      "pnl": 297.88,
+      "pnl_pct": 2.6
+    },
+    {
+      "date": "2026-05-22",
+      "portfolio": 13860.05,
+      "invested": 13406.23,
+      "benchmark": 13849.75,
+      "pnl": 453.82,
+      "pnl_pct": 3.39
+    }
+  ]
+}
