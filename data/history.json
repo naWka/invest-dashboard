@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13",
+  "updated": "2026-10-14",
   "tickers": {
     "SWRD": "SWRD.L",
     "EIMI": "EIMI.L",
@@ -1112,12 +1112,20 @@
       "pnl_pct": 6.51
     },
     {
-      "date": "2026-10-13",
-      "portfolio": 14243.4,
+      "date": "2026-10-12",
+      "portfolio": 14289.08,
       "invested": 13406.23,
-      "benchmark": 14333.75,
-      "pnl": 837.17,
-      "pnl_pct": 6.24
+      "benchmark": 14363.0,
+      "pnl": 882.85,
+      "pnl_pct": 6.59
+    },
+    {
+      "date": "2026-10-14",
+      "portfolio": 14147.11,
+      "invested": 13406.23,
+      "benchmark": 14253.97,
+      "pnl": 740.88,
+      "pnl_pct": 5.53
     }
   ]
 }
