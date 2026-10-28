@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-27",
+  "updated": "2026-10-28",
   "tickers": {
     "SWRD": "SWRD.L",
     "EIMI": "EIMI.L",
@@ -1206,6 +1206,14 @@
       "benchmark": 14272.59,
       "pnl": 749.4,
       "pnl_pct": 5.59
+    },
+    {
+      "date": "2026-10-28",
+      "portfolio": 14181.59,
+      "invested": 13406.23,
+      "benchmark": 14280.56,
+      "pnl": 775.36,
+      "pnl_pct": 5.78
     }
   ]
 }
